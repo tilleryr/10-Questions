@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10 Questions — Interview Practice Partner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1a1a1f;
+    --bg-card: #232329;
+    --bg-input: #2a2a32;
+    --text: #e8e6e1;
+    --text-muted: #9a9890;
+    --accent: #c9a55a;
+    --accent-hover: #dbb96e;
+    --border: #3a3a42;
+    --green: #6abf69;
+    --red: #cf6666;
+    --orange: #d4944c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 36px;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  textarea, input[type="text"], input[type="password"] {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+
+  textarea:focus, input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  textarea { min-height: 120px; }
+  textarea.short { min-height: 80px; }
+
+  .field-note {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: -18px;
+    margin-bottom: 24px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn:hover { background: var(--accent-hover); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(201, 165, 90, 0.1);
+  }
+
+  .btn-small {
+    padding: 8px 18px;
+    font-size: 0.85rem;
+  }
+
+  /* Screen management */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Interview screen */
+  .interview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+
+  .question-counter {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .interview-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .chat-area {
+    min-height: 300px;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-bottom: 24px;
+  }
+
+  .chat-area::-webkit-scrollbar { width: 4px; }
+  .chat-area::-webkit-scrollbar-track { background: transparent; }
+  .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .message {
+    margin-bottom: 20px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message-interviewer {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .message-user {
+    background: rgba(201, 165, 90, 0.08);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border-left: 3px solid var(--text-muted);
+  }
+
+  .message-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  .message-interviewer .message-label { color: var(--accent); }
+  .message-user .message-label { color: var(--text-muted); }
+
+  .message-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .voice-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .mic-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .mic-btn:hover { background: rgba(201, 165, 90, 0.1); }
+
+  .mic-btn.recording {
+    background: var(--accent);
+    color: var(--bg);
+    animation: pulseRecord 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulseRecord {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201, 165, 90, 0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(201, 165, 90, 0); }
+  }
+
+  .mic-btn svg { width: 24px; height: 24px; }
+
+  .voice-hint {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    flex: 1;
+  }
+
+  .voice-hint strong { color: var(--text); }
+
+  .thinking-indicator {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .thinking-indicator.visible { display: flex; }
+
+  .thinking-dots span {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: thinkBounce 1.4s ease-in-out infinite;
+  }
+
+  .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes thinkBounce {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Scorecard */
+  .score-summary {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 32px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .score-big {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3.5rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .score-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .score-question {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+
+  .score-question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .score-question-num {
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .score-question-pts {
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  .score-question-text {
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .criteria-item {
+    font-size: 0.82rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: var(--bg);
+  }
+
+  .criteria-item .criteria-name { color: var(--text-muted); }
+  .criteria-item .criteria-score { font-weight: 700; float: right; }
+
+  .score-5 { color: var(--green); }
+  .score-4 { color: var(--green); }
+  .score-3 { color: var(--orange); }
+  .score-2 { color: var(--red); }
+  .score-1 { color: var(--red); }
+
+  .advice-text {
+    font-size: 0.9rem;
+    padding: 12px 16px;
+    background: rgba(201, 165, 90, 0.06);
+    border-radius: 8px;
+    border-left: 2px solid var(--accent);
+    line-height: 1.7;
+  }
+
+  .overall-assessment {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 28px;
+    margin-top: 32px;
+    border: 1px solid var(--border);
+    line-height: 1.8;
+    font-size: 0.95rem;
+  }
+
+  .overall-assessment h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+
+  .error-message {
+    background: rgba(207, 102, 102, 0.1);
+    border: 1px solid var(--red);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.9rem;
+    color: var(--red);
+    margin-bottom: 16px;
+  }
+
+  .api-key-group {
+    position: relative;
+  }
+
+  .api-key-group .toggle-vis {
+    position: absolute;
+    right: 12px;
+    top: 38px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.82rem;
+  }
+
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 26, 31, 0.9);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .loading-overlay.visible {
+    display: flex;
+  }
+
+  .loading-overlay p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+  }
+
+  .actions-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+</style>
+</head>
+<body>
+
+<!-- SCREEN 1: SETUP -->
+<div id="setup-screen" class="screen active">
+  <div class="container">
+    <h1>10 Questions</h1>
+    <p class="subtitle">Interview practice that talks back.</p>
+
+    <div class="api-key-group">
+      <label for="api-key">Gemini API Key</label>
+      <input type="password" id="api-key" placeholder="Paste your Gemini API key here">
+      <button class="toggle-vis" onclick="toggleKeyVis()">show</button>
+    </div>
+    <p class="field-note">Free at <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent)">aistudio.google.com/apikey</a>. Your key stays in your browser and is never stored.</p>
+
+    <label for="seniority">Position Level</label>
+    <input type="text" id="seniority" placeholder="e.g., Chief Operating Officer, VP of Operations">
+
+    <label for="jd">Job Description</label>
+    <textarea id="jd" placeholder="Paste the full job description here"></textarea>
+
+    <label for="resume">Your Resume / Experience (optional)</label>
+    <textarea id="resume" class="short" placeholder="Paste your resume or key experience. Helps the interviewer ask targeted questions."></textarea>
+
+    <div id="setup-error" class="error-message" style="display:none"></div>
+
+    <button class="btn" onclick="startInterview()">Enter Interview Room</button>
+  </div>
+</div>
+
+<!-- SCREEN 2: INTERVIEW -->
+<div id="interview-screen" class="screen">
+  <div class="container">
+    <div class="interview-header">
+      <div>
+        <h2>10 Questions</h2>
+        <div class="interview-status">
+          <div class="status-dot"></div>
+          <span>Interview in progress</span>
+        </div>
+      </div>
+      <div class="question-counter" id="question-counter">Starting</div>
+    </div>
+
+    <div class="chat-area" id="chat-area"></div>
+
+    <div class="thinking-indicator" id="thinking">
+      <div class="thinking-dots"><span></span><span></span><span></span></div>
+      <span>Interviewer is thinking...</span>
+    </div>
+
+    <div class="voice-controls" id="voice-controls">
+      <button class="mic-btn" id="mic-btn" onclick="toggleRecording()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </button>
+      <div class="voice-hint" id="voice-hint">
+        <strong>Click the microphone</strong> to start speaking. Click again when you're done.
+      </div>
+    </div>
+
+    <div class="actions-row" style="margin-top:16px">
+      <button class="btn-secondary btn-small" id="type-toggle" onclick="toggleTypeMode()">Type instead</button>
+      <button class="btn-secondary btn-small" onclick="skipSpeech()">Stop speaking</button>
+    </div>
+
+    <!-- Type mode (hidden by default) -->
+    <div id="type-mode" style="display:none; margin-top:16px;">
+      <textarea id="type-input" class="short" placeholder="Type your response here..."></textarea>
+      <button class="btn btn-small" onclick="submitTyped()">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: SCORECARD -->
+<div id="scorecard-screen" class="screen">
+  <div class="container">
+    <h1>Performance Report</h1>
+    <p class="subtitle">Career coach assessment of your interview.</p>
+
+    <div id="scorecard-loading" style="text-align:center; padding:60px 0;">
+      <div class="spinner" style="margin:0 auto 16px"></div>
+      <p style="color:var(--text-muted)">Evaluating your interview...</p>
+    </div>
+
+    <div id="scorecard-content" style="display:none"></div>
+
+    <div class="actions-row" id="scorecard-actions" style="display:none">
+      <button class="btn" onclick="resetApp()">Practice Again</button>
+      <button class="btn-secondary" onclick="downloadReport()">Download Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <p>Preparing your interviewer...</p>
+</div>
+
+<script>
+// ============================================
+// STATE
+// ============================================
+let apiKey = '';
+let conversationHistory = [];
+let systemPrompt = '';
+let evaluationPrompt = '';
+let isRecording = false;
+let recognition = null;
+let synthesis = window.speechSynthesis;
+let interviewComplete = false;
+let questionCount = 0;
+let fullTranscript = [];
+let jobDescription = '';
+let seniorityLevel = '';
+let resumeText = '';
+let isSpeaking = false;
+
+// ============================================
+// SETUP
+// ============================================
+function toggleKeyVis() {
+  const input = document.getElementById('api-key');
+  const btn = document.querySelector('.toggle-vis');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = 'hide';
+  } else {
+    input.type = 'password';
+    btn.textContent = 'show';
+  }
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideError(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function buildSystemPrompt(jd, seniority, resume) {
+  return `You are a hiring manager conducting a mid-process interview for an open position. The candidate has already passed a recruiter screening and possibly a panel interview, but this is not the final step. If you give the green light, they will likely have one more round with peers or board members that is more of a formality. That means this interview is the real decision point. You are deciding whether this is someone you want to work with closely, whether they think the way you need them to think, and whether they will make your life easier or harder.
+
+You are an experienced executive who has managed teams of 20-100+ people and has hired for senior roles multiple times. You report to the CEO or a C-suite peer.
+
+YOUR INTERVIEW CONTEXT:
+- Job Description: ${jd}
+- Position Level: ${seniority}
+${resume ? '- Candidate Resume: ' + resume : '- No resume provided. Base your questions on the job description.'}
+
+YOUR PERSONA:
+- You are warm but direct. You do not use corporate pleasantries or filler. You talk like a real person in a real conversation.
+- You are conversational, not formal. This is closer to a working lunch than a boardroom. You may share brief anecdotes from your own experience when it feels natural, but keep them short and use them to prompt deeper answers from the candidate.
+- You are challenging. When a candidate gives a surface-level answer, you follow up. You ask "how" and "what happened next" and "what would you do differently." You do not accept vague claims without examples.
+- You vary your energy. Some questions you ask casually. Some you lean into with clear intensity. This keeps the candidate on their toes.
+- You occasionally interrupt politely to redirect if the candidate is going off-track or rambling. A real interviewer does this.
+- You do not tell the candidate how they are doing during the interview. You do not say "great answer" or "that's exactly what I was looking for." You may nod verbally ("mm-hm," "OK," "got it") and move on.
+
+INTERVIEW FLOW:
+
+Phase 1 — Small Talk and Framing (1-2 minutes):
+Open with a slightly awkward but friendly icebreaker. Examples: comment on the weather being weird lately, mention you just came from another meeting that ran long, ask if they found the building OK (virtual equivalent: ask if their setup is working). Keep it brief and a little clumsy, the way real small talk often is before an interview.
+
+Then set the frame for the conversation. Say something like: "So, I know you've already talked with the team and HR, so I'm not going to re-ask everything they covered. I do have a few things I want to dig into, but honestly I'd like this to feel more like a conversation than a formal interview. I want to get a sense of how you think about this work and see if we're on the same page."
+
+Give a brief (2-3 sentence) overview of what matters to you about this role and what your team needs right now. This should feel like a peer sharing context, not a job description readback.
+
+Phase 2 — Interview Questions (10 questions):
+Ask exactly 10 questions over the course of the interview. Draw questions from the job description and tailor them to the seniority level provided.
+
+Question mix:
+Because you framed this as a conversation, your questions should not all sound like formal interview prompts. Mix structured questions with organic follow-ups that arise naturally from what the candidate just said. The overall session should cover these areas, but they can emerge in any order:
+- 2-3 questions that explore how the candidate thinks about the work (e.g., "So when you walked into that situation, what was the first thing you focused on?" or "How do you usually figure out what's actually broken vs. what people say is broken?")
+- 2 questions probing specific experience from the resume (if provided), framed casually (e.g., "I noticed you were at [company] during their acquisition. What was that actually like from the ops side?")
+- 2 situational questions tied to real challenges in this role (e.g., "OK so here's something we're dealing with right now..." then describe a realistic scenario and ask how they'd approach it)
+- 1-2 questions about leadership approach and how they work with the people above and below them
+- 1 question about a mistake, a hard lesson, or something they'd do differently
+- 1 unexpected or revealing question (e.g., "What do people who report to you wish you'd do differently?" or "What's a hill you'd die on in operations?")
+
+CRITICAL — Question Variation:
+Every time a new session starts, generate fresh questions. Even if the job description is the same, rephrase questions so they are never identical to a previous session. Vary the angle of attack. The candidate should never be able to predict the exact phrasing.
+
+Follow-up behavior:
+- Because this is conversational, follow-ups should feel like natural curiosity, not interrogation. Instead of "Can you give me a specific example?" try "Oh interesting, so what did you actually do when that happened?" or "Wait, so how did that land with the board?"
+- Follow up on at least 4 of the 10 questions. Push for specifics: numbers, timelines, what the candidate personally did vs. what the team did, what the outcome was.
+- If a candidate gives a very strong, detailed answer, you may react naturally ("Yeah, that tracks" or "OK, that makes sense") and let the conversation flow to the next topic.
+- If a candidate gives a vague or evasive answer, push once with genuine curiosity. If they still don't go deeper, move on, but note it internally.
+- Occasionally share a brief reaction or related thought of your own before asking the next question. This is what makes it feel like a conversation rather than a Q&A.
+
+Phase 3 — Candidate Questions (up to 5):
+After the 10th question, transition by saying something like "That's what I wanted to cover on my end. What questions do you have for me?"
+
+When the candidate asks questions:
+- Answer them in character as the hiring manager. Be helpful but realistic. Do not oversell the role or the company.
+- If the candidate asks a strong, insightful question, give a substantive answer.
+- If the candidate asks a generic question ("What's the culture like?"), give a polite but brief answer.
+- After each answer, pause and ask "What else?" or "Anything else you want to know?" until they have asked up to 5 questions or say they are done.
+
+Phase 4 — Close:
+Thank them for their time. Tell them the next steps in 1-2 sentences (e.g., "We have a few more candidates to talk to this week, and you should hear from our recruiter by next Friday."). End warmly but without giving away any evaluation.
+
+After your closing statement, add this exact text on a new line:
+[INTERVIEW_COMPLETE]
+
+FORMATTING FOR VOICE:
+- Keep your responses to 1-4 sentences at a time when you are asking questions or responding to candidate questions. Long monologues sound unnatural in voice.
+- Use natural speech patterns: contractions, occasional filler ("So," "OK so," "Alright"), and sentence fragments where they sound human.
+- Do not use bullet points, headers, or any visual formatting. This will be spoken aloud.
+- Do not use emoji.
+- Do not use asterisks or other markdown formatting.
+
+IMPORTANT: You must keep track of how many questions you have asked. After exactly 10 questions (not counting follow-ups or small talk), transition to Phase 3. Do not ask more than 10 primary questions.`;
+}
+
+function buildEvaluationPrompt() {
+  return `You are a career coach evaluating a mock interview performance. You have 20+ years of experience coaching executives through job searches, and you have sat on hiring committees yourself. You are honest, specific, and constructive. You do not soften bad news, but you always pair criticism with actionable advice.
+
+SCORING RUBRIC:
+
+Score each of the 10 interview questions on a 1-5 scale across these five criteria:
+
+1. RESPONSIVENESS (Did they answer the actual question?)
+   5 = Directly and completely addressed what was asked
+   4 = Addressed it but drifted slightly or missed a sub-part
+   3 = Partially answered, needed the follow-up to get there
+   2 = Mostly talked around the question without answering it
+   1 = Did not answer the question asked
+
+2. CLARITY (Were their words clear and easy to follow?)
+   5 = Crisp, well-structured, no confusion
+   4 = Clear overall with one minor muddy moment
+   3 = Understandable but meandering or repetitive
+   2 = Hard to follow; disorganized or unclear phrasing
+   1 = Confusing or incoherent
+
+3. RELEVANCE (Was the answer relevant to the skills and duties of the job?)
+   5 = Example directly demonstrated a required skill or responsibility
+   4 = Relevant but the connection to the role was implicit, not stated
+   3 = Somewhat relevant; interviewer would have to make the connection themselves
+   2 = Tangential; the example didn't clearly relate to the role
+   1 = Irrelevant to the position
+
+4. SENIORITY FIT (Was the response appropriate for the level they are seeking?)
+   5 = Demonstrated executive-level thinking, ownership, and scope
+   4 = Mostly senior-level but one element felt mid-level
+   3 = Mixed; some senior framing but significant junior-level framing
+   2 = Mostly sounded like a manager, not a director/VP/C-suite candidate
+   1 = Response was not appropriate for the seniority level at all
+
+5. RECOVERY (If they misspoke or stumbled, did they recover?)
+   5 = No stumbles, or recovered so smoothly it was barely noticeable
+   4 = Minor stumble, corrected quickly
+   3 = Noticeable stumble, recovered but it took a moment
+   2 = Stumbled and only partially recovered
+   1 = Stumbled and did not recover; the answer went off the rails
+   N/A = No stumble occurred (score this as 5)
+
+OUTPUT FORMAT:
+
+You must respond in valid JSON with this exact structure:
+{
+  "totalScore": <number out of 250>,
+  "questions": [
+    {
+      "number": 1,
+      "questionText": "<brief paraphrase of the question>",
+      "totalScore": <number out of 25>,
+      "criteria": {
+        "responsiveness": {"score": <1-5>, "note": "<1 sentence>"},
+        "clarity": {"score": <1-5>, "note": "<1 sentence>"},
+        "relevance": {"score": <1-5>, "note": "<1 sentence>"},
+        "seniorityFit": {"score": <1-5>, "note": "<1 sentence>"},
+        "recovery": {"score": <1-5>, "note": "<1 sentence>"}
+      },
+      "advice": "<specific actionable advice if any score is below 5, otherwise null>"
+    }
+  ],
+  "candidateQuestions": {
+    "assessment": "<2-3 sentences evaluating the quality of questions asked>",
+    "missedOpportunities": "<note any important questions they should have asked>"
+  },
+  "overall": {
+    "narrative": "<2-3 paragraph assessment covering strengths, patterns needing work, and whether they'd advance>",
+    "topImprovements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"]
+  }
+}
+
+TONE:
+- Direct and practical. No preamble or praise for participating.
+- Write as if you are debriefing a client who is paying you for honest feedback.
+- Use plain language. No jargon.
+- Do not use constructions in threes (e.g., avoid "clear, concise, and compelling") in the narrative.
+- Minimize em dashes in the narrative. Use periods or commas instead.
+
+Respond ONLY with the JSON object. No markdown, no code fences, no explanation outside the JSON.`;
+}
+
+// ============================================
+// INTERVIEW FLOW
+// ============================================
+async function startInterview() {
+  apiKey = document.getElementById('api-key').value.trim();
+  jobDescription = document.getElementById('jd').value.trim();
+  seniorityLevel = document.getElementById('seniority').value.trim();
+  resumeText = document.getElementById('resume').value.trim();
+
+  hideError('setup-error');
+
+  if (!apiKey) { showError('setup-error', 'Please enter your Gemini API key.'); return; }
+  if (!seniorityLevel) { showError('setup-error', 'Please enter the position level.'); return; }
+  if (!jobDescription) { showError('setup-error', 'Please paste the job description.'); return; }
+
+  systemPrompt = buildSystemPrompt(jobDescription, seniorityLevel, resumeText);
+  evaluationPrompt = buildEvaluationPrompt();
+  conversationHistory = [];
+  fullTranscript = [];
+  questionCount = 0;
+  interviewComplete = false;
+
+  document.getElementById('loading-overlay').classList.add('visible');
+
+  try {
+    const response = await callGemini('Hello, I\'m here for the interview.');
+    document.getElementById('loading-overlay').classList.remove('visible');
+    showScreen('interview-screen');
+    addMessage('interviewer', response);
+    speakText(response);
+    updateCounter();
+  } catch (err) {
+    document.getElementById('loading-overlay').classList.remove('visible');
+    showError('setup-error', 'Could not connect to Gemini. Check your API key and try again. Error: ' + err.message);
+  }
+}
+
+async function callGemini(userMessage) {
+  conversationHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+
+  const body = {
+    contents: conversationHistory,
+    systemInstruction: { parts: [{ text: systemPrompt }] },
+    generationConfig: {
+      temperature: 0.9,
+      topP: 0.95,
+      maxOutputTokens: 1024
+    }
+  };
+
+  // Retry up to 3 times with increasing delays for rate limits
+  let lastError = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) {
+      const waitSeconds = attempt * 15; // 15s, then 30s
+      document.getElementById('voice-hint').innerHTML = `<strong>Rate limit hit. Waiting ${waitSeconds} seconds...</strong>`;
+      await new Promise(resolve => setTimeout(resolve, waitSeconds * 1000));
+    }
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+      conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
+
+      // Track transcript
+      fullTranscript.push({ role: 'user', text: userMessage });
+      fullTranscript.push({ role: 'interviewer', text: reply });
+
+      // Check for interview complete marker
+      if (reply.includes('[INTERVIEW_COMPLETE]')) {
+        interviewComplete = true;
+      }
+
+      return reply.replace('[INTERVIEW_COMPLETE]', '').trim();
+    }
+
+    const errData = await res.json().catch(() => ({}));
+    if (res.status === 429) {
+      lastError = new Error('Rate limit reached. Retrying...');
+      continue; // Try again after delay
+    }
+    // Non-rate-limit error, don't retry
+    throw new Error(errData.error?.message || `API error: ${res.status}`);
+  }
+
+  // All retries exhausted
+  throw new Error('Rate limit persisted after 3 attempts. Wait a few minutes and try again.');
+}
+
+async function callGeminiEval(transcript) {
+  const body = {
+    contents: [
+      {
+        role: 'user',
+        parts: [{
+          text: `Here is the full interview transcript. The job description is for a ${seniorityLevel} role.\n\nJob Description:\n${jobDescription}\n\nTranscript:\n${transcript}\n\nPlease evaluate this interview performance.`
+        }]
+      }
+    ],
+    systemInstruction: { parts: [{ text: evaluationPrompt }] },
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: 16384,
+      thinkingConfig: { thinkingLevel: "NONE" }
+    }
+  };
+
+  // Retry up to 3 times for rate limits
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) {
+      const waitSeconds = attempt * 20; // 20s, then 40s — eval is heavier
+      document.getElementById('scorecard-loading').innerHTML = `
+        <div class="spinner" style="margin:0 auto 16px"></div>
+        <p style="color:var(--text-muted)">Rate limit hit. Waiting ${waitSeconds} seconds before retrying...</p>
+      `;
+      await new Promise(resolve => setTimeout(resolve, waitSeconds * 1000));
+      document.getElementById('scorecard-loading').innerHTML = `
+        <div class="spinner" style="margin:0 auto 16px"></div>
+        <p style="color:var(--text-muted)">Evaluating your interview...</p>
+      `;
+    }
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+      let text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+      // Clean markdown fences and any preamble
+      text = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+
+      // Try to extract JSON if there's extra text around it
+      const jsonStart = text.indexOf('{');
+      const jsonEnd = text.lastIndexOf('}');
+      if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+        text = text.substring(jsonStart, jsonEnd + 1);
+      }
+
+      try {
+        return JSON.parse(text);
+      } catch (parseErr) {
+        // JSON was truncated or malformed — return a fallback object with raw text
+        return {
+          totalScore: null,
+          questions: [],
+          candidateQuestions: null,
+          overall: {
+            narrative: text,
+            topImprovements: []
+          },
+          _rawFallback: true
+        };
+      }
+    }
+
+    if (res.status === 429) {
+      continue; // Retry after delay
+    }
+    throw new Error(`Evaluation API error: ${res.status}`);
+  }
+
+  throw new Error('Rate limit persisted during evaluation. Wait a few minutes and click Practice Again.');
+}
+
+// ============================================
+// UI UPDATES
+// ============================================
+function addMessage(role, text) {
+  const chatArea = document.getElementById('chat-area');
+  const div = document.createElement('div');
+  div.className = `message message-${role === 'interviewer' ? 'interviewer' : 'user'}`;
+  div.innerHTML = `
+    <div class="message-label">${role === 'interviewer' ? 'Interviewer' : 'You'}</div>
+    <div class="message-text">${escapeHtml(text)}</div>
+  `;
+  chatArea.appendChild(div);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function updateCounter() {
+  // Count how many user messages exist (rough question tracker)
+  const userMessages = fullTranscript.filter(m => m.role === 'user').length;
+  const display = userMessages <= 1 ? 'Getting started' : `Response ${userMessages - 1} of ~10`;
+  document.getElementById('question-counter').textContent = display;
+}
+
+function showThinking(show) {
+  document.getElementById('thinking').classList.toggle('visible', show);
+}
+
+// ============================================
+// VOICE
+// ============================================
+function initSpeechRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return null;
+
+  const recog = new SpeechRecognition();
+  recog.continuous = true;
+  recog.interimResults = false;
+  recog.lang = 'en-US';
+
+  let finalText = '';
+
+  recog.onresult = (event) => {
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalText += event.results[i][0].transcript + ' ';
+      }
+    }
+    document.getElementById('voice-hint').innerHTML = `<strong>Listening...</strong> ${finalText.trim().substring(finalText.length - 80)}`;
+  };
+
+  recog.onerror = (event) => {
+    console.log('Speech recognition error:', event.error);
+    if (event.error !== 'aborted') {
+      stopRecording();
+    }
+  };
+
+  recog.onend = () => {
+    if (isRecording) {
+      // Auto-restart if we're still supposed to be recording
+      try { recog.start(); } catch(e) {}
+    } else if (finalText.trim()) {
+      handleUserInput(finalText.trim());
+      finalText = '';
+    }
+  };
+
+  recog._getFinal = () => {
+    const t = finalText.trim();
+    finalText = '';
+    return t;
+  };
+
+  return recog;
+}
+
+function toggleRecording() {
+  if (isSpeaking) {
+    skipSpeech();
+    return;
+  }
+
+  if (isRecording) {
+    stopRecording();
+  } else {
+    startRecording();
+  }
+}
+
+function startRecording() {
+  if (!recognition) {
+    recognition = initSpeechRecognition();
+  }
+  if (!recognition) {
+    showError('setup-error', 'Your browser does not support speech recognition. Use Chrome for best results.');
+    return;
+  }
+
+  isRecording = true;
+  document.getElementById('mic-btn').classList.add('recording');
+  document.getElementById('voice-hint').innerHTML = '<strong>Listening...</strong> Speak your answer.';
+
+  try {
+    recognition.start();
+  } catch(e) {
+    // Already started
+  }
+}
+
+function stopRecording() {
+  isRecording = false;
+  document.getElementById('mic-btn').classList.remove('recording');
+  document.getElementById('voice-hint').innerHTML = '<strong>Processing...</strong>';
+
+  if (recognition) {
+    const text = recognition._getFinal();
+    try { recognition.stop(); } catch(e) {}
+
+    if (text) {
+      handleUserInput(text);
+    } else {
+      document.getElementById('voice-hint').innerHTML = '<strong>Click the microphone</strong> to start speaking. Click again when you\'re done.';
+    }
+  }
+}
+
+function speakText(text) {
+  if (!synthesis) return;
+
+  synthesis.cancel();
+  isSpeaking = true;
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.95;
+  utterance.pitch = 1.0;
+
+  // Try to pick a natural-sounding voice
+  const voices = synthesis.getVoices();
+  const preferred = voices.find(v =>
+    v.name.includes('Samantha') ||
+    v.name.includes('Karen') ||
+    v.name.includes('Daniel') ||
+    v.name.includes('Google US English') ||
+    (v.lang === 'en-US' && v.localService)
+  );
+  if (preferred) utterance.voice = preferred;
+
+  utterance.onend = () => {
+    isSpeaking = false;
+    if (interviewComplete) {
+      goToScorecard();
+    } else {
+      document.getElementById('voice-hint').innerHTML = '<strong>Click the microphone</strong> to respond.';
+    }
+  };
+
+  utterance.onerror = () => {
+    isSpeaking = false;
+  };
+
+  synthesis.speak(utterance);
+}
+
+function skipSpeech() {
+  if (synthesis) {
+    synthesis.cancel();
+    isSpeaking = false;
+    if (interviewComplete) {
+      goToScorecard();
+    } else {
+      document.getElementById('voice-hint').innerHTML = '<strong>Click the microphone</strong> to respond.';
+    }
+  }
+}
+
+// Load voices
+if (synthesis) {
+  synthesis.onvoiceschanged = () => synthesis.getVoices();
+}
+
+// ============================================
+// TYPE MODE
+// ============================================
+function toggleTypeMode() {
+  const typeMode = document.getElementById('type-mode');
+  const btn = document.getElementById('type-toggle');
+  if (typeMode.style.display === 'none') {
+    typeMode.style.display = 'block';
+    btn.textContent = 'Use voice';
+  } else {
+    typeMode.style.display = 'none';
+    btn.textContent = 'Type instead';
+  }
+}
+
+function submitTyped() {
+  const input = document.getElementById('type-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  handleUserInput(text);
+}
+
+// ============================================
+// MESSAGE HANDLING
+// ============================================
+async function handleUserInput(text) {
+  addMessage('user', text);
+  updateCounter();
+  showThinking(true);
+  document.getElementById('voice-hint').innerHTML = '<strong>Interviewer is responding...</strong>';
+
+  try {
+    const response = await callGemini(text);
+    showThinking(false);
+    addMessage('interviewer', response);
+    speakText(response);
+    updateCounter();
+  } catch (err) {
+    showThinking(false);
+    const errDiv = document.createElement('div');
+    errDiv.className = 'error-message';
+    errDiv.textContent = 'Error: ' + err.message;
+    document.getElementById('chat-area').appendChild(errDiv);
+    document.getElementById('voice-hint').innerHTML = '<strong>Click the microphone</strong> to try again.';
+  }
+}
+
+// ============================================
+// SCORECARD
+// ============================================
+async function goToScorecard() {
+  showScreen('scorecard-screen');
+  document.getElementById('scorecard-loading').style.display = 'block';
+  document.getElementById('scorecard-content').style.display = 'none';
+  document.getElementById('scorecard-actions').style.display = 'none';
+
+  // Build transcript string
+  const transcriptStr = fullTranscript
+    .map(m => `${m.role === 'user' ? 'CANDIDATE' : 'INTERVIEWER'}: ${m.text}`)
+    .join('\n\n');
+
+  try {
+    const evaluation = await callGeminiEval(transcriptStr);
+    renderScorecard(evaluation);
+  } catch (err) {
+    document.getElementById('scorecard-loading').style.display = 'none';
+    document.getElementById('scorecard-content').style.display = 'block';
+    document.getElementById('scorecard-content').innerHTML = `
+      <div class="error-message">
+        Could not generate evaluation. Error: ${escapeHtml(err.message)}
+        <br><br>You can still review your interview above. Click "Practice Again" to start over.
+      </div>
+    `;
+    document.getElementById('scorecard-actions').style.display = 'flex';
+  }
+}
+
+function renderScorecard(data) {
+  document.getElementById('scorecard-loading').style.display = 'none';
+  const content = document.getElementById('scorecard-content');
+  content.style.display = 'block';
+
+  let html = '';
+
+  // Fallback: if JSON was truncated, show raw text
+  if (data._rawFallback) {
+    html += `<div class="overall-assessment">
+      <h3>Evaluation (partial)</h3>
+      <p style="margin-bottom:12px; color:var(--orange); font-size:0.85rem;">The structured scorecard could not be fully generated. Here is the raw evaluation:</p>
+      <p>${escapeHtml(data.overall?.narrative || 'No evaluation text returned.')}</p>
+    </div>`;
+    content.innerHTML = html;
+    document.getElementById('scorecard-actions').style.display = 'flex';
+    return;
+  }
+
+  // Total score
+  html += `<div class="score-summary">
+    <div class="score-big">${data.totalScore || '—'}</div>
+    <div class="score-label">out of 250 points</div>
+  </div>`;
+
+  // Per-question breakdown
+  if (data.questions) {
+    data.questions.forEach(q => {
+      html += `<div class="score-question">
+        <div class="score-question-header">
+          <span class="score-question-num">Question ${q.number}</span>
+          <span class="score-question-pts ${getScoreClass(q.totalScore, 25)}">${q.totalScore}/25</span>
+        </div>
+        <div class="score-question-text">${escapeHtml(q.questionText)}</div>
+        <div class="criteria-grid">`;
+
+      if (q.criteria) {
+        const names = {
+          responsiveness: 'Responsiveness',
+          clarity: 'Clarity',
+          relevance: 'Relevance',
+          seniorityFit: 'Seniority Fit',
+          recovery: 'Recovery'
+        };
+        for (const [key, label] of Object.entries(names)) {
+          const c = q.criteria[key];
+          if (c) {
+            html += `<div class="criteria-item">
+              <span class="criteria-name">${label}</span>
+              <span class="criteria-score score-${c.score}">${c.score}/5</span>
+            </div>`;
+          }
+        }
+      }
+
+      html += `</div>`;
+
+      if (q.advice) {
+        html += `<div class="advice-text">${escapeHtml(q.advice)}</div>`;
+      }
+
+      html += `</div>`;
+    });
+  }
+
+  // Candidate questions assessment
+  if (data.candidateQuestions) {
+    html += `<div class="overall-assessment">
+      <h3>Your Questions Assessment</h3>
+      <p>${escapeHtml(data.candidateQuestions.assessment || '')}</p>`;
+    if (data.candidateQuestions.missedOpportunities) {
+      html += `<p style="margin-top:12px; color:var(--orange);">${escapeHtml(data.candidateQuestions.missedOpportunities)}</p>`;
+    }
+    html += `</div>`;
+  }
+
+  // Overall
+  if (data.overall) {
+    html += `<div class="overall-assessment" style="margin-top:16px">
+      <h3>Overall Assessment</h3>
+      <p>${escapeHtml(data.overall.narrative || '')}</p>`;
+
+    if (data.overall.topImprovements?.length) {
+      html += `<div style="margin-top:20px;">
+        <h3>Priority Improvements</h3>`;
+      data.overall.topImprovements.forEach((imp, i) => {
+        html += `<p style="margin-top:8px;"><strong>${i + 1}.</strong> ${escapeHtml(imp)}</p>`;
+      });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+
+  content.innerHTML = html;
+  document.getElementById('scorecard-actions').style.display = 'flex';
+}
+
+function getScoreClass(score, max) {
+  const pct = score / max;
+  if (pct >= 0.9) return 'score-5';
+  if (pct >= 0.75) return 'score-4';
+  if (pct >= 0.6) return 'score-3';
+  if (pct >= 0.4) return 'score-2';
+  return 'score-1';
+}
+
+// ============================================
+// UTILITIES
+// ============================================
+function resetApp() {
+  conversationHistory = [];
+  fullTranscript = [];
+  questionCount = 0;
+  interviewComplete = false;
+  document.getElementById('chat-area').innerHTML = '';
+  showScreen('setup-screen');
+}
+
+function downloadReport() {
+  const content = document.getElementById('scorecard-content');
+  const text = content.innerText;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '10questions-report.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// Handle Enter key in type mode
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    const typeInput = document.getElementById('type-input');
+    if (document.activeElement === typeInput) {
+      e.preventDefault();
+      submitTyped();
+    }
+  }
+});
+</script>
+</body>
+</html>
